@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String         @unique
+  role         String
+  books        Book[]         @relation("UserBooks")
+  loans        Loan[]         
+  reviews      Review[]       
+  reservations Reservation[]  
+}
+
+model Book {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  author       String
+  isbn         String
+  available    Boolean        @default(true)
+  user         User?          @relation("UserBooks", fields: [userId], references: [id])
+  userId       String?        @db.ObjectId
+  loans        Loan[]
+  reviews      Review[]
+  reservations Reservation[]  
+}
+
+model Loan {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  bookId    String     @db.ObjectId
+  userId    String     @db.ObjectId
+  loanDate  DateTime   @default(now())
+  returnDue DateTime
+  returned  Boolean    @default(false)
+
+  book Book @relation(fields: [bookId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Review {
+  id      String     @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+  userId  String     @db.ObjectId
+  bookId  String     @db.ObjectId
+
+  book Book @relation(fields: [bookId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Reservation {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  bookId      String     @db.ObjectId
+  userId      String     @db.ObjectId
+  requestDate DateTime   @default(now())
+
+  book Book @relation(fields: [bookId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}

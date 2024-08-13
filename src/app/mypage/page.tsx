@@ -1,9 +1,12 @@
 import LoginLayout from '@/components/common/LoginLayout'
+import React from 'react'
 
-export default async function HomePage() {
+const MyPage = () => {
   return (
     <LoginLayout>
-      <div>TOP</div>
+      <div>MyPage</div>
     </LoginLayout>
   )
 }
+
+export default MyPage

@@ -1,9 +1,12 @@
 import LoginLayout from '@/components/common/LoginLayout'
+import React from 'react'
 
-export default async function HomePage() {
+const SearchPage = () => {
   return (
     <LoginLayout>
-      <div>TOP</div>
+      <div>SearchPage</div>
     </LoginLayout>
   )
 }
+
+export default SearchPage
