@@ -33,7 +33,7 @@ const LoginLayout = async ({ children }: LayoutProps) => {
           defaultCollapsed={defaultCollapsed}
           navCollapsedSize={4}
         >
-          <Card className="p-4 ml-4">{children}</Card>
+          <Card className="p-4 mx-4">{children}</Card>
         </DashCard>
       </div>
     </>

@@ -8,27 +8,29 @@ datasource db {
 }
 
 model User {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  email        String         @unique
-  role         String
-  books        Book[]         @relation("UserBooks")
-  loans        Loan[]         
-  reviews      Review[]       
-  reservations Reservation[]  
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String          @unique
+  role            String
+  books           Book[]          @relation("UserBooks")
+  loans           Loan[]          
+  reviews         Review[]        
+  reservations    Reservation[]  
+  requestedBooks  RequestedBook[]
 }
 
 model Book {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  author       String
-  isbn         String
-  available    Boolean        @default(true)
-  user         User?          @relation("UserBooks", fields: [userId], references: [id])
-  userId       String?        @db.ObjectId
-  loans        Loan[]
-  reviews      Review[]
-  reservations Reservation[]  
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  author          String
+  isbn            String
+  available       Boolean         @default(true)
+  user            User?           @relation("UserBooks", fields: [userId], references: [id])
+  userId          String?         @db.ObjectId
+  loans           Loan[]
+  reviews         Review[]
+  reservations    Reservation[]  
+  requests        RequestedBook[]
 }
 
 model Loan {
@@ -61,4 +63,16 @@ model Reservation {
 
   book Book @relation(fields: [bookId], references: [id])
   user User @relation(fields: [userId], references: [id])
+}
+
+model RequestedBook {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  author      String
+  userId      String     @db.ObjectId
+  requestDate DateTime   @default(now())
+
+  user User   @relation(fields: [userId], references: [id])
+  book Book?  @relation(fields: [bookId], references: [id])
+  bookId String? @db.ObjectId
 }
