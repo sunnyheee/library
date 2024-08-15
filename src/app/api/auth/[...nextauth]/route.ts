@@ -2,6 +2,8 @@ import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import prisma from '@/lib/prismaClient'
 
+const adminEmails = process.env.ADMIN_EMAILS?.split(',') || []
+
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -38,6 +40,7 @@ export const authOptions: NextAuthOptions = {
       const email = user.email
 
       if (email) {
+        const isAdmin = adminEmails.includes(email)
         const existingUser = await prisma.user.findUnique({
           where: { email },
         })
@@ -45,14 +48,14 @@ export const authOptions: NextAuthOptions = {
         if (existingUser) {
           await prisma.user.update({
             where: { email },
-            data: { role: email === 'sunnyheee0@gmail.com' ? 'admin' : 'user' },
+            data: { role: isAdmin ? 'admin' : 'user' },
           })
         } else {
           await prisma.user.create({
             data: {
               email,
               name: user.name || '管理者',
-              role: email === 'sunnyheee0@gmail.com' ? 'admin' : 'user',
+              role: isAdmin ? 'admin' : 'user',
             },
           })
         }

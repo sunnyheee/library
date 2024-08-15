@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Book } from '@/types/book'
+import { Book } from '@prisma/client'
 
 export const useBooks = () => {
   const [books, setBooks] = useState<Book[]>([])

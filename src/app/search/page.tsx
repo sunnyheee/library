@@ -1,14 +1,17 @@
 import Booklist from '@/components/common/Booklist'
 import LoginLayout from '@/components/common/LoginLayout'
-import { fetchBooks } from '@/lib/api'
+import { PrismaClient } from '@prisma/client'
 import React from 'react'
 
+const prisma = new PrismaClient()
+
 const SearchPage = async () => {
-  const books = await fetchBooks()
+  const books = await prisma.book.findMany()
+  const loans = await prisma.loan.findMany()
 
   return (
     <LoginLayout>
-      <Booklist books={books} />
+      <Booklist books={books} loans={loans} />
     </LoginLayout>
   )
 }

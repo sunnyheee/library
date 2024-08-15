@@ -15,13 +15,17 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Book } from '@/types/book'
+import { Book, Loan } from '@prisma/client'
 
 interface AdminTabsProps {
   initialBooks: Book[]
+  initialLoans?: Loan[]
 }
 
-const AdminTabs: React.FC<AdminTabsProps> = ({ initialBooks }) => {
+const AdminTabs: React.FC<AdminTabsProps> = ({
+  initialBooks,
+  initialLoans,
+}) => {
   const [books, setBooks] = useState(initialBooks)
 
   const handleBookAdded = (newBook: Book) => {
@@ -50,8 +54,10 @@ const AdminTabs: React.FC<AdminTabsProps> = ({ initialBooks }) => {
       <TabsContent value="booklist">
         <Booklist
           books={books}
+          loans={initialLoans}
           onUpdate={handleBookUpdated}
           onDelete={handleBookDeleted}
+          isAdminPage={true} // Admin 페이지임을 표시
         />
       </TabsContent>
       <TabsContent value="addbook">

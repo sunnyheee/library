@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Book } from '@/types/book'
+import { Book } from '@prisma/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {

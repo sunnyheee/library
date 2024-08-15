@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,7 +10,7 @@ import {
   SelectItem,
   SelectValue,
 } from '@/components/ui/select'
-import { Book } from '@/types/book'
+import { Book } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import { fetchBookDataFromOpenBD } from '@/utils/fetchBookData'
 import { cCodeOptions } from '@/config/cCodeOptions'
