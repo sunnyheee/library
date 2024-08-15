@@ -10,3 +10,8 @@ export interface Book {
   available: boolean
   userId: string | null
 }
+
+export interface Category {
+  id: string
+  name: string
+}

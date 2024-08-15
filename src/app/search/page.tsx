@@ -5,6 +5,7 @@ import React from 'react'
 
 const SearchPage = async () => {
   const books = await fetchBooks()
+
   return (
     <LoginLayout>
       <Booklist books={books} />

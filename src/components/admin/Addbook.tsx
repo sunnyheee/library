@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Book } from '@prisma/client'
 import DialogModal from '../common/DialogModal'
 import { useSession } from 'next-auth/react'
+import { fetchBookDataFromOpenBD } from '@/utils/fetchBookData'
 
 interface AddbookProps {
   onBookAdded: (newBook: Book) => void
@@ -18,11 +19,34 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
   const [publishing, setPublishing] = useState('')
   const [amount, setAmount] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const { data: session } = useSession()
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(Number(e.target.value))
+  }
+
+  const handleIsbnChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newIsbn = e.target.value
+    setIsbn(newIsbn)
+
+    if (newIsbn.length === 13) {
+      try {
+        const bookData = await fetchBookDataFromOpenBD(newIsbn)
+        console.log('Fetched book data:', bookData)
+        if (bookData) {
+          setTitle(bookData.title || '')
+          setAuthor(bookData.author || '')
+          setPublishing(bookData.publishing || '')
+        } else {
+          setErrorMessage('책 정보를 불러오는 중 오류가 발생했습니다.')
+        }
+      } catch (error) {
+        setErrorMessage('책 정보를 불러오는 중 오류가 발생했습니다.')
+        console.error('Error fetching book data:', error)
+      }
+    }
   }
 
   const handleSubmit = async () => {
@@ -31,35 +55,43 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
       return
     }
 
-    const response = await fetch('/api/books', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        isbn,
-        code,
-        title,
-        category,
-        author,
-        publishing,
-        amount,
-        userId: session.user.id,
-      }),
-    })
+    try {
+      const response = await fetch('/api/books', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isbn,
+          code,
+          title,
+          category,
+          author,
+          publishing,
+          amount,
+          userId: session.user.id,
+        }),
+      })
 
-    if (response.ok) {
-      const newBook = await response.json()
-      console.log(newBook, 'newBook')
-      onBookAdded(newBook)
-      setIsbn('')
-      setCode('')
-      setTitle('')
-      setCategory('')
-      setAuthor('')
-      setPublishing('')
-      setAmount(0)
-      setIsModalOpen(true)
+      if (response.ok) {
+        const newBook = await response.json()
+        console.log(newBook, 'newBook')
+        onBookAdded(newBook)
+        setIsbn('')
+        setCode('')
+        setTitle('')
+        setCategory('')
+        setAuthor('')
+        setPublishing('')
+        setAmount(0)
+        setIsModalOpen(true)
+      } else {
+        const errorData = await response.json()
+        setErrorMessage(errorData.message || '책 등록 중 오류가 발생했습니다.')
+      }
+    } catch (error) {
+      setErrorMessage('책 등록 중 오류가 발생했습니다.')
+      console.error('Error adding book:', error)
     }
   }
 
@@ -72,11 +104,7 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
       <dl className="flex flex-wrap items-center mb-4">
         <dt className="w-[120px]">ISBN</dt>
         <dd className="flex-1">
-          <Input
-            value={isbn}
-            onChange={(e) => setIsbn(e.target.value)}
-            placeholder="ISBN"
-          />
+          <Input value={isbn} onChange={handleIsbnChange} placeholder="ISBN" />
         </dd>
       </dl>
       <dl className="flex flex-wrap items-center mb-4">
@@ -141,13 +169,20 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
         </dd>
       </dl>
       <div className="flex justify-end">
-        <Button onClick={handleSubmit}>Add Book</Button>
+        <Button onClick={handleSubmit}>本を追加する</Button>
       </div>
       <DialogModal
         isModalOpen={isModalOpen}
         closeModal={closeModal}
-        text={'등록완료'}
+        text={'登録完了'}
       />
+      {errorMessage && (
+        <DialogModal
+          isModalOpen={isModalOpen}
+          closeModal={closeModal}
+          text={errorMessage}
+        />
+      )}
     </div>
   )
 }

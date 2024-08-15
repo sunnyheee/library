@@ -28,6 +28,18 @@ const AdminTabs: React.FC<AdminTabsProps> = ({ initialBooks }) => {
     setBooks((prevBooks) => [...prevBooks, newBook])
   }
 
+  const handleBookUpdated = (updatedBook: Book) => {
+    setBooks((prevBooks) =>
+      prevBooks.map((book) =>
+        book.id === updatedBook.id ? updatedBook : book,
+      ),
+    )
+  }
+
+  const handleBookDeleted = (bookId: string) => {
+    setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId))
+  }
+
   return (
     <Tabs defaultValue="booklist">
       <TabsList className="grid w-full grid-cols-3">
@@ -35,9 +47,12 @@ const AdminTabs: React.FC<AdminTabsProps> = ({ initialBooks }) => {
         <TabsTrigger value="addbook">本登録</TabsTrigger>
         <TabsTrigger value="requestedbook">本申込リスト</TabsTrigger>
       </TabsList>
-
       <TabsContent value="booklist">
-        <Booklist books={books} />
+        <Booklist
+          books={books}
+          onUpdate={handleBookUpdated}
+          onDelete={handleBookDeleted}
+        />
       </TabsContent>
       <TabsContent value="addbook">
         <Addbook onBookAdded={handleBookAdded} />

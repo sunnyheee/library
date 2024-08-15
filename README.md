@@ -15,3 +15,7 @@ NEXTAUTH_SECRET=
 DATABASE_URL=""
 NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
+
+## 책 API
+
+https://openbd.jp/
