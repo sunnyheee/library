@@ -1,15 +1,18 @@
 import LoginLayout from '@/components/common/LoginLayout'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 import { fetchBooks } from '@/lib/api'
 import AdminTabs from '@/components/admin/AdminTabs'
+import Loading from '../loading'
 
 const AdminPage = async () => {
   const books = await fetchBooks()
 
   return (
     <LoginLayout>
-      <AdminTabs initialBooks={books} />
+      <Suspense fallback={<Loading />}>
+        <AdminTabs initialBooks={books} />
+      </Suspense>
     </LoginLayout>
   )
 }

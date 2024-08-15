@@ -1,4 +1,3 @@
-// src/lib/api.ts
 import { Book } from '@/types/book'
 
 export const fetchBooks = async (): Promise<Book[]> => {
@@ -18,6 +17,7 @@ export const fetchBooks = async (): Promise<Book[]> => {
         `Failed to fetch books: ${response.status} ${response.statusText}`,
       )
     }
+
     const contentType = response.headers.get('content-type')
     if (!contentType || !contentType.includes('application/json')) {
       console.error('Expected JSON response, got:', contentType)
@@ -26,8 +26,12 @@ export const fetchBooks = async (): Promise<Book[]> => {
 
     const books = await response.json()
     return books
-  } catch (error) {
-    console.error('Error fetching books:', error)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error fetching books:', error.message)
+    } else {
+      console.error('Unknown error fetching books:', error)
+    }
     throw error
   }
 }

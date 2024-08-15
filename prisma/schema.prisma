@@ -21,9 +21,14 @@ model User {
 
 model Book {
   id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  title           String
-  author          String
   isbn            String
+  code            String
+  title           String
+  category        String
+  author          String
+  publishing      String
+  amount          Int // 숫자일경우 Int(정수), Float(소수점)
+  
   available       Boolean         @default(true)
   user            User?           @relation("UserBooks", fields: [userId], references: [id])
   userId          String?         @db.ObjectId

@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('Error fetching books:', error.message)
+      console.error('Error stack trace:', error.stack)
       return NextResponse.json(
         { message: 'Failed to fetch books', error: error.message },
         { status: 500 },
@@ -24,7 +25,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // POST 메서드 처리 로직 (책 등록 등)
+    const data = await req.json()
+    console.log(data, 'api data')
+    const book = await prisma.book.create({ data })
+
+    return NextResponse.json(book, { status: 201 })
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('Error registering book:', error.message)
