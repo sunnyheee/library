@@ -3,6 +3,15 @@
 import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Card } from '../ui/card'
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select'
+import { cCodeOptions } from '@/config/cCodeOptions'
 
 interface SearchBarProps {
   searchIsbn: string
@@ -17,6 +26,8 @@ interface SearchBarProps {
   onSearchPublishingChange: (value: string) => void
   searchAmount: string
   onSearchAmountChange: (value: string) => void
+  searchCategory: string
+  onSearchCategoryChange: (value: string) => void
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -32,6 +43,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onSearchPublishingChange,
   searchAmount,
   onSearchAmountChange,
+  searchCategory,
+  onSearchCategoryChange,
 }) => {
   return (
     <Card className="p-4 mb-10 bg-blue-100">
@@ -62,6 +75,23 @@ const SearchBar: React.FC<SearchBarProps> = ({
             placeholder="出版社"
             className="w-full"
           />
+        </div>
+        <div>
+          <span className="text-sm mb-2 block">区分</span>
+          <Select onValueChange={(value) => onSearchCategoryChange(value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="区分" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {cCodeOptions.categories.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
         <div>
           <span className="text-sm mb-2 block">ISBN</span>

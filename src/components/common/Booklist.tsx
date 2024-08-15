@@ -42,6 +42,7 @@ const Booklist: React.FC<BooklistProps> = ({ books, onUpdate, onDelete }) => {
   const [searchAuthor, setSearchAuthor] = useState('')
   const [searchPublishing, setSearchPublishing] = useState('')
   const [searchAmount, setSearchAmount] = useState('')
+  const [searchCategory, setSearchCategory] = useState('')
 
   const { data: session } = useSession()
   const isAdmin = session?.user?.role === 'admin'
@@ -77,7 +78,8 @@ const Booklist: React.FC<BooklistProps> = ({ books, onUpdate, onDelete }) => {
       (searchPublishing
         ? book.publishing.toLowerCase().includes(searchPublishing.toLowerCase())
         : true) &&
-      (searchAmount ? book.amount === Number(searchAmount) : true),
+      (searchAmount ? book.amount === Number(searchAmount) : true) &&
+      (searchCategory ? book.cCode.endsWith(searchCategory) : true),
   )
 
   const indexOfLastBook = currentPage * itemsPerPage
@@ -100,6 +102,8 @@ const Booklist: React.FC<BooklistProps> = ({ books, onUpdate, onDelete }) => {
         onSearchPublishingChange={setSearchPublishing}
         searchAmount={searchAmount}
         onSearchAmountChange={setSearchAmount}
+        searchCategory={searchCategory}
+        onSearchCategoryChange={setSearchCategory}
       />
       <Table className="min-w-full table-fixed">
         <TableHeader>
