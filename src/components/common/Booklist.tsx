@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Book } from '@/types/book'
-import BookDetailModal from './BookDetailModal'
+import BookDetailModal from '../admin/BookDetailModal'
 import {
   Select,
   SelectTrigger,
@@ -22,6 +22,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
 import { getCCodeLabel } from '@/utils/getCCodeLabel'
+import SearchBar from './SearchBar'
 
 interface BooklistProps {
   books: Book[]
@@ -34,6 +35,13 @@ const Booklist: React.FC<BooklistProps> = ({ books, onUpdate, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(5)
+
+  const [searchIsbn, setSearchIsbn] = useState('')
+  const [searchCCode, setSearchCCode] = useState('')
+  const [searchTitle, setSearchTitle] = useState('')
+  const [searchAuthor, setSearchAuthor] = useState('')
+  const [searchPublishing, setSearchPublishing] = useState('')
+  const [searchAmount, setSearchAmount] = useState('')
 
   const { data: session } = useSession()
   const isAdmin = session?.user?.role === 'admin'
@@ -56,13 +64,43 @@ const Booklist: React.FC<BooklistProps> = ({ books, onUpdate, onDelete }) => {
     setCurrentPage(1)
   }
 
+  const filteredBooks = books.filter(
+    (book) =>
+      (searchIsbn ? book.isbn.includes(searchIsbn) : true) &&
+      (searchCCode ? book.cCode.includes(searchCCode) : true) &&
+      (searchTitle
+        ? book.title.toLowerCase().includes(searchTitle.toLowerCase())
+        : true) &&
+      (searchAuthor
+        ? book.author.toLowerCase().includes(searchAuthor.toLowerCase())
+        : true) &&
+      (searchPublishing
+        ? book.publishing.toLowerCase().includes(searchPublishing.toLowerCase())
+        : true) &&
+      (searchAmount ? book.amount === Number(searchAmount) : true),
+  )
+
   const indexOfLastBook = currentPage * itemsPerPage
   const indexOfFirstBook = indexOfLastBook - itemsPerPage
-  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook)
-  const totalPages = Math.ceil(books.length / itemsPerPage)
+  const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook)
+  const totalPages = Math.ceil(filteredBooks.length / itemsPerPage)
 
   return (
     <div className="overflow-x-auto">
+      <SearchBar
+        searchIsbn={searchIsbn}
+        onSearchIsbnChange={setSearchIsbn}
+        searchCCode={searchCCode}
+        onSearchCCodeChange={setSearchCCode}
+        searchTitle={searchTitle}
+        onSearchTitleChange={setSearchTitle}
+        searchAuthor={searchAuthor}
+        onSearchAuthorChange={setSearchAuthor}
+        searchPublishing={searchPublishing}
+        onSearchPublishingChange={setSearchPublishing}
+        searchAmount={searchAmount}
+        onSearchAmountChange={setSearchAmount}
+      />
       <Table className="min-w-full table-fixed">
         <TableHeader>
           <TableRow>

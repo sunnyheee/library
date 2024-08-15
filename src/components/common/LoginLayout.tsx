@@ -27,7 +27,7 @@ const LoginLayout = async ({ children }: LayoutProps) => {
   return (
     <>
       <Header />
-      <div className="flex pb-4">
+      <div className="flex justify-between items-center max-w-screen-xl mx-auto pb-4">
         <DashCard
           defaultLayout={defaultLayout}
           defaultCollapsed={defaultCollapsed}

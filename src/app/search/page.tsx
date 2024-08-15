@@ -1,4 +1,4 @@
-import Booklist from '@/components/admin/Booklist'
+import Booklist from '@/components/common/Booklist'
 import LoginLayout from '@/components/common/LoginLayout'
 import { fetchBooks } from '@/lib/api'
 import React from 'react'

@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Addbook from '@/components/admin/Addbook'
-import Booklist from '@/components/admin/Booklist'
+import Booklist from '@/components/common/Booklist'
 import { Button } from '@/components/ui/button'
 import {
   Card,
