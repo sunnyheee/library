@@ -34,7 +34,6 @@ const DashCard = ({
             sizes,
           )}`
         }}
-        className="h-full max-h-[800px] items-stretch"
       >
         <ResizablePanel
           defaultSize={defaultLayout[0]}
