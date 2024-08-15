@@ -21,12 +21,12 @@ model User {
 
 model Book {
   id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  isbn            String
+  isbn            String          @unique // 고유한
   cCode           String
   title           String
   author          String
   publishing      String
-  amount          Int // 숫자일경우 Int(정수), Float(소수점)
+  amount          Int             // 숫자일경우 Int(정수), Float(소수점)
   
   available       Boolean         @default(true)
   user            User?           @relation("UserBooks", fields: [userId], references: [id])

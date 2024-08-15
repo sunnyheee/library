@@ -17,7 +17,7 @@ interface Props {
 const DialogModal = ({ isModalOpen, closeModal, text }: Props) => {
   return (
     <Dialog open={isModalOpen} onOpenChange={closeModal}>
-      <DialogContent>
+      <DialogContent className="pt-12">
         <DialogHeader>
           <DialogTitle>{text}</DialogTitle>
         </DialogHeader>

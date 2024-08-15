@@ -26,7 +26,19 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json()
-    console.log(data, 'api data')
+    const { isbn } = data
+
+    const existingBook = await prisma.book.findUnique({
+      where: { isbn },
+    })
+
+    if (existingBook) {
+      return NextResponse.json(
+        { message: '既に登録されています', book: existingBook },
+        { status: 409 },
+      )
+    }
+
     const book = await prisma.book.create({ data })
 
     return NextResponse.json(book, { status: 201 })
@@ -34,13 +46,13 @@ export async function POST(req: NextRequest) {
     if (error instanceof Error) {
       console.error('Error registering book:', error.message)
       return NextResponse.json(
-        { message: '책 등록 중 오류가 발생했습니다.', error: error.message },
+        { message: '登録中エラーが発生しました', error: error.message },
         { status: 500 },
       )
     } else {
       console.error('Unknown error registering book:', error)
       return NextResponse.json(
-        { message: '책 등록 중 오류가 발생했습니다.', error: 'Unknown error' },
+        { message: '登録中エラーが発生しました', error: 'Unknown error' },
         { status: 500 },
       )
     }

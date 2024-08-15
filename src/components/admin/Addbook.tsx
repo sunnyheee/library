@@ -30,6 +30,7 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
   const [audience, setAudience] = useState('')
   const [form, setForm] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [existingBook, setExistingBook] = useState<Book | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const { data: session } = useSession()
@@ -50,10 +51,10 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
           setAuthor(bookData.author || '')
           setPublishing(bookData.publishing || '')
         } else {
-          setErrorMessage('책 정보를 불러오는 중 오류가 발생했습니다.')
+          setErrorMessage('書籍情報の取得中にエラーが発生しました。')
         }
       } catch (error) {
-        setErrorMessage('책 정보를 불러오는 중 오류가 발생했습니다.')
+        setErrorMessage('書籍情報の取得中にエラーが発生しました。')
       }
     }
   }
@@ -95,17 +96,25 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
         setAudience('')
         setForm('')
         setIsModalOpen(true)
+      } else if (response.status === 409) {
+        const errorData = await response.json()
+        setErrorMessage(errorData.message)
+        setExistingBook(errorData.book)
+        setIsModalOpen(true)
       } else {
         const errorData = await response.json()
-        setErrorMessage(errorData.message || '책 등록 중 오류가 발생했습니다.')
+        setErrorMessage(errorData.message || '登録中エラーが発生しました')
+        setIsModalOpen(true)
       }
     } catch (error) {
-      setErrorMessage('책 등록 중 오류가 발생했습니다.')
+      setErrorMessage('登録中エラーが発生しました')
+      setIsModalOpen(true)
     }
   }
 
   const closeModal = () => {
     setIsModalOpen(false)
+    setExistingBook(null)
   }
 
   return (
@@ -217,16 +226,15 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
       <div className="flex justify-end">
         <Button onClick={handleSubmit}>本を追加する</Button>
       </div>
-      <DialogModal
-        isModalOpen={isModalOpen}
-        closeModal={closeModal}
-        text={'登録完了'}
-      />
-      {errorMessage && (
+      {errorMessage && existingBook && (
         <DialogModal
           isModalOpen={isModalOpen}
           closeModal={closeModal}
-          text={errorMessage}
+          text={
+            existingBook
+              ? `【${existingBook.title}】は既に登録されています`
+              : errorMessage || '登録完了しました'
+          }
         />
       )}
     </div>
