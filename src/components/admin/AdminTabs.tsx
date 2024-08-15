@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Book } from '@prisma/client'
+import { Book } from '@/types/book'
 
 interface AdminTabsProps {
   initialBooks: Book[]

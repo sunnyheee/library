@@ -22,9 +22,8 @@ model User {
 model Book {
   id              String          @id @default(auto()) @map("_id") @db.ObjectId
   isbn            String
-  code            String
+  cCode           String
   title           String
-  category        String
   author          String
   publishing      String
   amount          Int // 숫자일경우 Int(정수), Float(소수점)

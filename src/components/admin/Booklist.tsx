@@ -9,10 +9,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Book } from '@prisma/client'
+import { Book } from '@/types/book'
 import BookDetailModal from './BookDetailModal'
 import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
+import { getCCodeLabel } from '@/utils/getCCodeLabel'
 
 interface BooklistProps {
   books: Book[]
@@ -55,8 +56,8 @@ const Booklist: React.FC<BooklistProps> = ({ books, onUpdate, onDelete }) => {
           {books.map((book) => (
             <TableRow key={book.id}>
               <TableCell>{book.isbn}</TableCell>
-              <TableCell>{book.code}</TableCell>
-              <TableCell>{book.category}</TableCell>
+              <TableCell>{book.cCode}</TableCell>
+              <TableCell>{getCCodeLabel(book.cCode)}</TableCell>
               <TableCell>{book.title}</TableCell>
               <TableCell>{book.author}</TableCell>
               <TableCell>{book.publishing}</TableCell>
