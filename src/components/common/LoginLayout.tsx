@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import React from 'react'
 import Header from '@/components/common/Header'
 import DashCard from '@/components/common/DashCard'
 import { Card } from '@/components/ui/card'
 import { cookies } from 'next/headers'
+import { authOptions } from '@/lib/auth'
 
 type LayoutProps = {
   children: React.ReactNode
