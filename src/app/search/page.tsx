@@ -9,6 +9,7 @@ const SearchPage = async () => {
   const books = await prisma.book.findMany()
   const loans = await prisma.loan.findMany()
 
+  console.log(books, 'books')
   return (
     <LoginLayout>
       <Booklist books={books} loans={loans} />

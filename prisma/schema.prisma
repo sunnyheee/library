@@ -45,7 +45,7 @@ model Loan {
   returnDue DateTime
   returned  Boolean    @default(false)
 
-  book Book @relation(fields: [bookId], references: [id])
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade) //onDelete: Cascade로 책삭제시 같이 삭제
   user User @relation(fields: [userId], references: [id])
 }
 

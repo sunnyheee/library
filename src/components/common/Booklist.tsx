@@ -13,7 +13,7 @@ interface BooklistProps {
   loans?: Loan[]
   onUpdate?: (updatedBook: Book) => void
   onDelete?: (bookId: string) => void
-  isAdminPage?: boolean // Admin 페이지 여부를 판단하기 위한 속성
+  isAdminPage?: boolean
 }
 
 const Booklist: React.FC<BooklistProps> = ({
@@ -29,7 +29,6 @@ const Booklist: React.FC<BooklistProps> = ({
   >(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [localBooks, setLocalBooks] = useState<Book[]>(books)
-  const { data: session } = useSession()
 
   const handleBorrowOrReturnClick = (
     book: Book,
@@ -52,6 +51,10 @@ const Booklist: React.FC<BooklistProps> = ({
         book.id === updatedBook.id ? updatedBook : book,
       ),
     )
+  }
+
+  const handleDeleteBook = (bookId: string) => {
+    setLocalBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId))
   }
 
   return (
@@ -92,10 +95,10 @@ const Booklist: React.FC<BooklistProps> = ({
       {selectedBook && isAdminPage && (
         <BookDetailModal
           book={selectedBook}
-          isOpen={isModalOpen}
+          isOpen={true}
           onClose={handleCloseModal}
-          onUpdate={onUpdate}
-          onDelete={onDelete}
+          onUpdate={handleUpdateBook}
+          onDelete={handleDeleteBook}
         />
       )}
     </div>

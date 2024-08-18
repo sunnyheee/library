@@ -18,22 +18,19 @@ import { Label } from '@/components/ui/label'
 import { Book, Loan } from '@prisma/client'
 
 interface AdminTabsProps {
-  initialBooks: Book[]
-  initialLoans?: Loan[]
+  books: Book[]
+  loans?: Loan[]
 }
 
-const AdminTabs: React.FC<AdminTabsProps> = ({
-  initialBooks,
-  initialLoans,
-}) => {
-  const [books, setBooks] = useState(initialBooks)
+const AdminTabs: React.FC<AdminTabsProps> = ({ books, loans }) => {
+  const [book, setBook] = useState(books)
 
   const handleBookAdded = (newBook: Book) => {
-    setBooks((prevBooks) => [...prevBooks, newBook])
+    setBook((prevBooks) => [...prevBooks, newBook])
   }
 
   const handleBookUpdated = (updatedBook: Book) => {
-    setBooks((prevBooks) =>
+    setBook((prevBooks) =>
       prevBooks.map((book) =>
         book.id === updatedBook.id ? updatedBook : book,
       ),
@@ -41,7 +38,7 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
   }
 
   const handleBookDeleted = (bookId: string) => {
-    setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId))
+    setBook((prevBooks) => prevBooks.filter((book) => book.id !== bookId))
   }
 
   return (
@@ -54,10 +51,10 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
       <TabsContent value="booklist">
         <Booklist
           books={books}
-          loans={initialLoans}
+          loans={loans}
           onUpdate={handleBookUpdated}
           onDelete={handleBookDeleted}
-          isAdminPage={true} // Admin 페이지임을 표시
+          isAdminPage={true}
         />
       </TabsContent>
       <TabsContent value="addbook">

@@ -1,17 +1,23 @@
 import LoginLayout from '@/components/common/LoginLayout'
 import React, { Suspense } from 'react'
 
-import { fetchBooks } from '@/lib/api'
+import { PrismaClient } from '@prisma/client'
+
 import AdminTabs from '@/components/admin/AdminTabs'
 import Loading from '../loading'
 
+const prisma = new PrismaClient()
+
 const AdminPage = async () => {
-  const books = await fetchBooks()
+  const books = await prisma.book.findMany()
+  const loans = await prisma.loan.findMany()
+
+  console.log(books, 'aa')
 
   return (
     <LoginLayout>
       <Suspense fallback={<Loading />}>
-        <AdminTabs initialBooks={books} />
+        <AdminTabs books={books} loans={loans} />
       </Suspense>
     </LoginLayout>
   )

@@ -14,7 +14,7 @@ import { Book } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import { fetchBookDataFromOpenBD } from '@/utils/fetchBookData'
 import { cCodeOptions } from '@/config/cCodeOptions'
-import DialogModal from '../common/DialogModal'
+import DialogConfirmModal from '../common/DialogConfirmModal'
 
 interface AddbookProps {
   onBookAdded: (newBook: Book) => void
@@ -335,7 +335,7 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
       </div>
       {errors.submit && <p className="text-red-500 mt-4">{errors.submit}</p>}
       {errorMessage && (
-        <DialogModal
+        <DialogConfirmModal
           isModalOpen={isModalOpen}
           closeModal={closeModal}
           text={
