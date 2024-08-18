@@ -1,9 +1,7 @@
 import Booklist from '@/components/common/Booklist'
 import LoginLayout from '@/components/common/LoginLayout'
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prismaClient'
 import React from 'react'
-
-const prisma = new PrismaClient()
 
 const SearchPage = async () => {
   const books = await prisma.book.findMany()

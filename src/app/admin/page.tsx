@@ -1,12 +1,9 @@
 import LoginLayout from '@/components/common/LoginLayout'
 import React, { Suspense } from 'react'
-
-import { PrismaClient } from '@prisma/client'
-
 import AdminTabs from '@/components/admin/AdminTabs'
 import Loading from '../loading'
 
-const prisma = new PrismaClient()
+import prisma from '@/lib/prismaClient'
 
 const AdminPage = async () => {
   const books = await prisma.book.findMany()
