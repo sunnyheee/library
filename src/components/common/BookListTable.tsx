@@ -76,14 +76,14 @@ const BookListTable: React.FC<BookListTableProps> = ({
                       <Button
                         onClick={() => onBorrowOrReturnClick(book, 'return')}
                       >
-                        반납하기
+                        返却する
                       </Button>
                     ) : (
                       <Button
                         onClick={() => onBorrowOrReturnClick(book, 'borrow')}
                         disabled={book.amount === 0}
                       >
-                        {book.amount > 0 ? '빌리기' : '대출 불가'}
+                        {book.amount > 0 ? '借りる' : '貸出不可'}
                       </Button>
                     )}
                   </TableCell>

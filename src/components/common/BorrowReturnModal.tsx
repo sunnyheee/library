@@ -68,7 +68,7 @@ const BorrowReturnModal: React.FC<BorrowReturnModalProps> = ({
     >
       {action === 'borrow' && (
         <div>
-          <label>반납 날짜를 선택하세요:</label>
+          <label>返却日を選択してください:</label>
           <DatePicker date={returnDue} setDate={setReturnDue} />{' '}
           {/* 반납 날짜 선택 */}
         </div>

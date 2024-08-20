@@ -32,9 +32,9 @@ const DialogModal = ({
         <div className="mt-4">{children}</div>
         <DialogFooter>
           <Button onClick={onConfirm} className="ml-2">
-            확인
+            確認
           </Button>
-          <Button onClick={closeModal}>닫기</Button>
+          <Button onClick={closeModal}>閉じる</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
