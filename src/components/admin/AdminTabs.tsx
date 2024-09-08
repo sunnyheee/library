@@ -1,6 +1,5 @@
 'use client'
-
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Addbook from '@/components/admin/Addbook'
 import Booklist from '@/components/common/Booklist'
@@ -16,29 +15,44 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Book, Loan } from '@prisma/client'
+import { useDispatch, useSelector } from 'react-redux'
+import { addBook, updateBook, deleteBook, setBooks } from '@/store/booksSlice'
+import { RootState } from '@/store/store'
 
 interface AdminTabsProps {
   books: Book[]
   loans?: Loan[]
 }
 
-const AdminTabs: React.FC<AdminTabsProps> = ({ books, loans }) => {
-  const [book, setBook] = useState(books)
+const AdminTabs: React.FC<AdminTabsProps> = ({
+  books: initialBooks,
+  loans,
+}) => {
+  const dispatch = useDispatch()
 
+  // Redux 상태에서 books 가져오기
+  const reduxBooks = useSelector((state: RootState) => state.books.list)
+
+  // 초기 로드 시 books 상태를 리덕스로 설정
+  useEffect(() => {
+    if (initialBooks.length > 0) {
+      dispatch(setBooks(initialBooks))
+    }
+  }, [initialBooks, dispatch])
+
+  // 책 추가 핸들러
   const handleBookAdded = (newBook: Book) => {
-    setBook((prevBooks) => [...prevBooks, newBook])
+    dispatch(addBook(newBook)) // Redux 상태에 추가
   }
 
+  // 책 업데이트 핸들러
   const handleBookUpdated = (updatedBook: Book) => {
-    setBook((prevBooks) =>
-      prevBooks.map((book) =>
-        book.id === updatedBook.id ? updatedBook : book,
-      ),
-    )
+    dispatch(updateBook(updatedBook)) // Redux 상태에 업데이트
   }
 
+  // 책 삭제 핸들러
   const handleBookDeleted = (bookId: string) => {
-    setBook((prevBooks) => prevBooks.filter((book) => book.id !== bookId))
+    dispatch(deleteBook(bookId)) // Redux 상태에서 삭제
   }
 
   return (
@@ -50,7 +64,7 @@ const AdminTabs: React.FC<AdminTabsProps> = ({ books, loans }) => {
       </TabsList>
       <TabsContent value="booklist">
         <Booklist
-          books={books}
+          books={reduxBooks}
           loans={loans}
           onUpdate={handleBookUpdated}
           onDelete={handleBookDeleted}
@@ -58,7 +72,7 @@ const AdminTabs: React.FC<AdminTabsProps> = ({ books, loans }) => {
         />
       </TabsContent>
       <TabsContent value="addbook">
-        <Addbook onBookAdded={handleBookAdded} />
+        <Addbook />
       </TabsContent>
       <TabsContent value="requestedbook">
         <Card>

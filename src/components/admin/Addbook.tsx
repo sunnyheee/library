@@ -15,12 +15,10 @@ import { useSession } from 'next-auth/react'
 import { fetchBookDataFromOpenBD } from '@/utils/fetchBookData'
 import { cCodeOptions } from '@/config/cCodeOptions'
 import DialogConfirmModal from '../common/DialogConfirmModal'
+import { useDispatch } from 'react-redux'
+import { addBook } from '@/store/booksSlice'
 
-interface AddbookProps {
-  onBookAdded: (newBook: Book) => void
-}
-
-const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
+const Addbook = () => {
   const [id, setId] = useState('')
   const [isbn, setIsbn] = useState('')
   const [cCodeCategory, setCCodeCategory] = useState('')
@@ -34,6 +32,7 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [existingBook, setExistingBook] = useState<Book | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const dispatch = useDispatch()
 
   const { data: session } = useSession()
 
@@ -174,7 +173,8 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
 
       if (response.ok) {
         const newBook = await response.json()
-        onBookAdded(newBook)
+        console.log('New book added:', newBook)
+        dispatch(addBook(newBook))
         setId('')
         setIsbn('')
         setCCodeCategory('')

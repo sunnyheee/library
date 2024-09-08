@@ -16,7 +16,6 @@ interface BookListTableProps {
   books: Book[]
   loans?: Loan[]
   isAdmin: boolean
-  onBorrowOrReturnClick: (book: Book, action: 'borrow' | 'return') => void
   onBookClick: (book: Book) => void
 }
 
@@ -24,7 +23,6 @@ const BookListTable: React.FC<BookListTableProps> = ({
   books,
   loans,
   isAdmin,
-  onBorrowOrReturnClick,
   onBookClick,
 }) => {
   const { data: session, status } = useSession()
@@ -70,29 +68,9 @@ const BookListTable: React.FC<BookListTableProps> = ({
                 <TableCell className="w-[180px]">{book.author}</TableCell>
                 <TableCell className="w-[180px]">{book.publishing}</TableCell>
                 <TableCell className="w-[120px]">{book.amount}</TableCell>
-                {!isAdmin && (
-                  <TableCell className="w-[120px]">
-                    {loaned ? (
-                      <Button
-                        onClick={() => onBorrowOrReturnClick(book, 'return')}
-                      >
-                        返却する
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => onBorrowOrReturnClick(book, 'borrow')}
-                        disabled={book.amount === 0}
-                      >
-                        {book.amount > 0 ? '借りる' : '貸出不可'}
-                      </Button>
-                    )}
-                  </TableCell>
-                )}
-                {isAdmin && (
-                  <TableCell className="w-[120px]">
-                    <Button onClick={() => onBookClick(book)}>詳細</Button>
-                  </TableCell>
-                )}
+                <TableCell className="w-[120px]">
+                  <Button onClick={() => onBookClick(book)}>詳細</Button>
+                </TableCell>
               </TableRow>
             )
           })}

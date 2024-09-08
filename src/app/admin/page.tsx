@@ -9,8 +9,6 @@ const AdminPage = async () => {
   const books = await prisma.book.findMany()
   const loans = await prisma.loan.findMany()
 
-  console.log(books, 'aa')
-
   return (
     <LoginLayout>
       <Suspense fallback={<Loading />}>
