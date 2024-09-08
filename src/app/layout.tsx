@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Noto_Sans_JP } from 'next/font/google'
 import './globals.css'
 import AuthSession from '@/components/providers/session-provider'
+import { Providers } from './providers'
 
 const notoSansJP = Noto_Sans_JP({ subsets: ['latin'] })
 
@@ -19,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={notoSansJP.className}>
-        <AuthSession>
-          <main>{children}</main>
-        </AuthSession>
+        <Providers>
+          <AuthSession>
+            <main>{children}</main>
+          </AuthSession>
+        </Providers>
       </body>
     </html>
   )
