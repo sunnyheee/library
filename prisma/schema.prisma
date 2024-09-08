@@ -3,12 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") 
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  id              String          @id @default(uuid())
   name            String
   email           String          @unique
   role            String
@@ -20,17 +21,16 @@ model User {
 }
 
 model Book {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  isbn            String          @unique // 고유한
+  id              String          @id @default(uuid())
+  isbn            String          @unique
   cCode           String
   title           String
   author          String
   publishing      String
-  amount          Int             // 숫자일경우 Int(정수), Float(소수점)
-  
+  amount          Int
   available       Boolean         @default(true)
   user            User?           @relation("UserBooks", fields: [userId], references: [id])
-  userId          String?         @db.ObjectId
+  userId          String?
   loans           Loan[]
   reviews         Review[]
   reservations    Reservation[]  
@@ -38,31 +38,31 @@ model Book {
 }
 
 model Loan {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  bookId    String     @db.ObjectId
-  userId    String     @db.ObjectId
+  id        String     @id @default(uuid())
+  bookId    String
+  userId    String
   loanDate  DateTime   @default(now())
   returnDue DateTime
   returned  Boolean    @default(false)
 
-  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade) //onDelete: Cascade로 책삭제시 같이 삭제
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id])
 }
 
 model Review {
-  id      String     @id @default(auto()) @map("_id") @db.ObjectId
+  id      String     @id @default(uuid())
   content String
-  userId  String     @db.ObjectId
-  bookId  String     @db.ObjectId
+  userId  String
+  bookId  String
 
   book Book @relation(fields: [bookId], references: [id])
   user User @relation(fields: [userId], references: [id])
 }
 
 model Reservation {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  bookId      String     @db.ObjectId
-  userId      String     @db.ObjectId
+  id          String     @id @default(uuid())
+  bookId      String
+  userId      String
   requestDate DateTime   @default(now())
 
   book Book @relation(fields: [bookId], references: [id])
@@ -70,13 +70,13 @@ model Reservation {
 }
 
 model RequestedBook {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  id          String     @id @default(uuid())
   title       String
   author      String
-  userId      String     @db.ObjectId
+  userId      String
   requestDate DateTime   @default(now())
 
   user User   @relation(fields: [userId], references: [id])
   book Book?  @relation(fields: [bookId], references: [id])
-  bookId String? @db.ObjectId
+  bookId String?
 }

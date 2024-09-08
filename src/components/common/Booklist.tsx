@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useSession } from 'next-auth/react'
 import { Loan, Book } from '@prisma/client'
 import SearchBar from './SearchBar'
 import BookListTable from './BookListTable'

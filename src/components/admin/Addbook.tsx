@@ -21,6 +21,7 @@ interface AddbookProps {
 }
 
 const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
+  const [id, setId] = useState('')
   const [isbn, setIsbn] = useState('')
   const [cCodeCategory, setCCodeCategory] = useState('')
   const [title, setTitle] = useState('')
@@ -42,6 +43,14 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
     setErrors((prevErrors) => ({
       ...prevErrors,
       amount: value > 0 ? null : '数量は1以上でなければなりません。',
+    }))
+  }
+
+  const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setId(e.target.value)
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      title: e.target.value ? null : '管理者コードは必須項目です。',
     }))
   }
 
@@ -122,6 +131,7 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
 
   const handleSubmit = async () => {
     const newErrors: { [key: string]: string | null } = {}
+    if (!id) newErrors.id = '管理者コードは必須項目です。'
     if (!isbn) newErrors.isbn = 'ISBNは必須項目です。'
     if (!audience) newErrors.audience = '販売対象を選択してください。'
     if (!form) newErrors.form = '発行形態を選択してください。'
@@ -151,6 +161,7 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          id,
           isbn,
           cCode,
           title,
@@ -164,6 +175,7 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
       if (response.ok) {
         const newBook = await response.json()
         onBookAdded(newBook)
+        setId('')
         setIsbn('')
         setCCodeCategory('')
         setTitle('')
@@ -202,6 +214,19 @@ const Addbook: React.FC<AddbookProps> = ({ onBookAdded }) => {
 
   return (
     <div className="max-w-[720px] w-full mx-auto my-4">
+      <dl className="flex flex-wrap items-center mb-4">
+        <dt className="w-[120px]">管理者コード</dt>
+        <dd className="flex-1">
+          <Input
+            value={id}
+            onChange={handleIdChange}
+            placeholder="管理者コード"
+          />
+          {errors.isbn && (
+            <p className="text-red-500 text-sm mt-2">{errors.id}</p>
+          )}
+        </dd>
+      </dl>
       <dl className="flex flex-wrap items-center mb-4">
         <dt className="w-[120px]">ISBN</dt>
         <dd className="flex-1">

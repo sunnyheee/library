@@ -49,7 +49,7 @@ const BorrowReturnModal: React.FC<BorrowReturnModalProps> = ({
         if (res.ok) {
           const updatedBook = await res.json()
           onUpdate?.(updatedBook.book)
-          onClose() // 모달 닫기
+          onClose()
         }
       } catch (error) {
         console.error('Error:', error)

@@ -6,6 +6,10 @@ npx prisma generate
 
 npx prisma db push
 
+### postgresql
+
+npx prisma migrate dev --name init
+
 ## env
 
 ```
